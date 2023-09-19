@@ -4,8 +4,17 @@ public class SimpleHttpRequest {
     private String method;
     private String httpVersion;
     private String host;
+    private String requestUrl;
 
     private SimpleHttpRequest() {}
+
+    public void setRequestUrl(String requestUrl) {
+        this.requestUrl = requestUrl;
+    }
+
+    public String getRequestUrl() {
+        return requestUrl;
+    }
 
     public void setMethod(String method) {
         this.method = method;
@@ -32,7 +41,7 @@ public class SimpleHttpRequest {
     }
 
     public static class Builder {
-        private SimpleHttpRequest target;
+        private SimpleHttpRequest target = new SimpleHttpRequest();
 
         public Builder addMethod(String method) {
             target.setMethod(method);
@@ -49,11 +58,17 @@ public class SimpleHttpRequest {
             return this;
         }
 
+        public Builder addRequestUrl(String url) {
+            target.setRequestUrl(url);
+            return this;
+        }
+
         public SimpleHttpRequest build() {
             if (
                 target.getHost() == null ||
                 target.getMethod() == null ||
-                target.getHttpVersion() == null
+                target.getHttpVersion() == null ||
+                target.getRequestUrl() == null
             ) {
                 throw new IllegalArgumentException();
             }
