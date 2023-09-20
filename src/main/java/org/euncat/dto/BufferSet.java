@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.UUID;
 
 @Builder
 public record BufferSet(BufferedReader reader, BufferedWriter writer) {
@@ -17,6 +18,14 @@ public record BufferSet(BufferedReader reader, BufferedWriter writer) {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
     }
+
+    public void write(String s) {
+        try {
+            writer.write(s);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
