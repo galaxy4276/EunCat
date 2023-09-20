@@ -12,23 +12,18 @@ import java.util.Objects;
 public final class HttpParser {
     private final List<String> methods = Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD");
 
-    public HttpRequest getHttpRequest(InputStream inputStream, BufferedReader br) throws Exception {
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-
+    public HttpRequest getHttpRequest(BufferedReader br) throws Exception {
         SimpleHttpRequest requestDetails = getRequestDetails(br.readLine());
         HttpRequest httpRequest = new HttpRequest(requestDetails);
 
-        System.out.println("================= Headers =====================");
         String s = br.readLine();
         while (Objects.nonNull(s) && !s.isEmpty()) {
-            System.out.println(s);
             String[] tokens = s.split(":");
             if (tokens.length > 1) {
                 httpRequest.setHeader(tokens[0], tokens[1]);
             }
             s = br.readLine();
         }
-        System.out.println("================= Headers Done =====================");
 
         return httpRequest;
     }
@@ -40,12 +35,11 @@ public final class HttpParser {
         if (methods.contains(tokens[0])) {
             method = tokens[0];
         }
-
         return SimpleHttpRequest.builder()
-                .addMethod(method)
-                .addRequestUrl(tokens[1])
-                .addHttpVersion(tokens[2])
-                .addHost("")
+                .method(method)
+                .requestUrl(tokens[1])
+                .httpVersion(tokens[2])
+                .host("")
                 .build();
     }
 

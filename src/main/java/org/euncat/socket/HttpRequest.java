@@ -5,8 +5,8 @@ import org.euncat.dto.SimpleHttpRequest;
 import java.util.HashMap;
 
 public class HttpRequest {
-    private HashMap<String, String> headers = new HashMap<>();
-    private SimpleHttpRequest simpleHttpRequest;
+    private final HashMap<String, String> headers = new HashMap<>();
+    private final SimpleHttpRequest simpleHttpRequest;
 
     public HttpRequest(SimpleHttpRequest request) {
         this.simpleHttpRequest = request;
