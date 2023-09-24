@@ -24,23 +24,16 @@ public class HttpWorker implements Runnable {
 
     @Override
     public void run() {
-        try {
-            Reactor.threadLocal.set(bufferSet);
-            HttpRequest httpRequest = httpParser.getHttpRequest(bufferSet.reader());
+        Reactor.threadLocal.set(bufferSet);
+        HttpRequest httpRequest = httpParser.getHttpRequest(bufferSet.reader());
 
-            route(httpRequest);
-
-            bufferSet.writer().close();
-            Reactor.threadLocal.remove();
-            socket.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        route(httpRequest);
+        close();
     }
 
     private void route(HttpRequest httpRequest) {
         String url = httpRequest.getRequestUrl();
-        HttpResponse responseWriter = new HttpResponse(httpRequest);
+        HttpResponse responseWriter = new HttpResponse();
 
         if (url.equals("/")) {
             writeFileListHtml(responseWriter);
@@ -104,6 +97,16 @@ public class HttpWorker implements Runnable {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    private void close() {
+        try {
+            bufferSet.writer().close();
+            Reactor.threadLocal.remove();
+            socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
